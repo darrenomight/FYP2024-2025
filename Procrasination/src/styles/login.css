@@ -1,0 +1,48 @@
+/* Keep styles consistent for both Login & Register */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('../assets/sunset.jpg') no-repeat center center/cover; /* Adjust the path if needed */
+    background-color: #f8f9fa;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logreg-title h2 {
+    font-weight: 600;
+}
+
+.form-box {
+    padding: 20px;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
