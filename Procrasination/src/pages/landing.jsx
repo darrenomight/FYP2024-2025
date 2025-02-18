@@ -20,7 +20,7 @@ const Landing = () => {
                     <div className="col-md-4">
                         <div className="card p-4">
                             <h4>📊 Track Progress</h4>
-                            <p>Monitor your productivity levels with real-time stats.</p>
+                            <p>Track your productivity levels with real-time stats.</p>
                         </div>
                     </div>
                     <div className="col-md-4">
