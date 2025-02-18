@@ -33,6 +33,7 @@ const Login = () => {
 
                                 <div className="text-center mt-3">
                                     <p>Don't have an account? <a href="#" onClick={() => setIsLogin(false)}>Register</a></p>
+                                    <p>Sign in with Google? google icon "--- firebase login/auth" </p>
                                 </div>
                             </form>
                         </div>
@@ -64,6 +65,7 @@ const Login = () => {
 
                                 <div className="text-center mt-3">
                                     <p>Already have an account? <a href="#" onClick={() => setIsLogin(true)}>Login</a></p>
+                                    <p>Sign in with Google? google icon "--- firebase login/auth" </p>
                                 </div>
                             </form>
                         </div>
