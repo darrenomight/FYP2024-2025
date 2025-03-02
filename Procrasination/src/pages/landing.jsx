@@ -8,7 +8,7 @@ const Landing = () => {
         <div className="landing-page">
             {/* Hero Section */}
             <section className="hero text-center text-white d-flex flex-column align-items-center justify-content-center" style={{ height: "100vh", background: "linear-gradient(to right, #6a11cb, #2575fc)" }}>
-                <h1 className="display-3 fw-bold">Welcome to Procrastination App</h1>
+                <h1 className="display-3 fw-bold">Welcome to Momentum The Procrastination App</h1>
                 <p className="lead">Turn your procrastination into productivity with gamification!</p>
                 <Link to="/login" className="btn btn-light btn-lg mt-3">Get Started</Link>
             </section>

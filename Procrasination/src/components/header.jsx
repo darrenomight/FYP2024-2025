@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap is imported
 const Header = () => {
     return (
         <nav className="navbar navbar-dark bg-dark d-flex justify-content-center p-3">
-            <h2 className="text-white me-3">Procrastination</h2>
+            <h2 className="text-white me-3">Momentum</h2>
             <div className="btn-group">
                 <Link to="/" className="btn btn-secondary">Landing</Link>
                 <Link to="/main" className="btn btn-secondary">Main</Link>
