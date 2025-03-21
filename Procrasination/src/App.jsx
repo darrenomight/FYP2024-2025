@@ -7,6 +7,7 @@ import Login from './pages/login';
 import NewTasks from './pages/newtasks'
 import Header from './components/header';
 import Footer from './components/footer';
+import UsernameSetup from "./pages/username";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/login" element={<Login />}/>
                 <Route path="/newtasks" element={<NewTasks />}/>
                 <Route path="/user_profile" element={<Profile />}/>
+                <Route path="/username-setup" element={<UsernameSetup />} />
             </Routes>
             </div>
           <Footer /> {/* Footer stays at the bottom */ } 
