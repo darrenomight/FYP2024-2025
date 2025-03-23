@@ -3,8 +3,10 @@ import { auth, db } from "../firebaseConfig";
 import { updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import UserMetrics from "../components/user_metrics.jsx";
 
 const UsernameSetup = () => {
+    const { darkMode } = UserMetrics(); 
     const user = auth.currentUser;
     const [username, setUsername] = useState("");
     const [error, setError] = useState("");
@@ -23,13 +25,13 @@ const UsernameSetup = () => {
         try {
             const userRef = doc(db, "users", user.uid);
 
-            // ✅ Update Firestore
+            //  Update Firestore
             await updateDoc(userRef, { username });
 
-            // ✅ Update Firebase Auth Profile
+            // Update Firebase Auth Profile
             await updateProfile(user, { displayName: username });
 
-            // ✅ Redirect to main dashboard
+            // Redirect to main dashboard
             navigate("/main");
         } catch (err) {
             setError("Error setting username. Try again.");

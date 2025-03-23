@@ -28,6 +28,8 @@ const NewTasks = () => {
                             {task.title}
                         </span>
 
+                        
+
                         <div>
                             {/* Mock Edit Button */}
                             <button className="btn btn-sm btn-warning me-2">Edit</button>

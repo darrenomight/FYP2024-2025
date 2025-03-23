@@ -13,7 +13,7 @@ const AuthPage = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
-                navigate("/username-setup"); // ✅ Always redirect new users
+                navigate("/username-setup"); // Always redirect new users
             }
             setUserChecked(true);
         });
@@ -21,7 +21,7 @@ const AuthPage = () => {
         return () => unsubscribe();
     }, []);
 
-    if (!userChecked) return <p>Loading...</p>; // ✅ Prevents redirect before user check is complete
+    if (!userChecked) return <p>Loading...</p>; // Prevents redirect before user check is complete
 
     return (
         <div className="login-container">
