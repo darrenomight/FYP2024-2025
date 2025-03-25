@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import defaultProfilePic from "../assets/sampleUserPf.jpg";
-import UserMetrics from "./user_metrics"; // 
+import UserMetrics from "./user_metrics";
+import { getGoalsCompletedCount } from "./task_metrics";
 
 const Sidebar = () => {
-
     const { username, profilePic, currentStreak, bestStreak, xp, loading } = UserMetrics();
+    const [goalsCompleted, setGoalsCompleted] = useState(0);
+
+    useEffect(() => {
+        const fetchCompleted = async () => {
+            const count = await getGoalsCompletedCount();
+            setGoalsCompleted(count);
+        };
+
+        fetchCompleted();
+    }, []);
 
     if (loading) return <p>Loading...</p>;
 
@@ -30,8 +40,8 @@ const Sidebar = () => {
                 <h5>Login Streak:</h5>
                 <p><strong>Current Streak:</strong> {currentStreak} days</p>
                 <p><strong>Best Streak:</strong> {bestStreak} days</p>
-                <p><strong>XP Earned:</strong> {xp || 0} XP</p> {/*  Default to 0 if XP is missing */}
-                <p><strong>Goals Completed:</strong> 12</p>
+                <p><strong>XP Earned:</strong> {xp || 0} XP</p>
+                <p><strong>Goals Completed:</strong> {goalsCompleted}</p>
             </div>
         </div>
     );

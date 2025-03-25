@@ -8,7 +8,7 @@ const Header = () => {
     const navigate = useNavigate();
     const user = auth.currentUser; // Check if user is logged in
 
-    // 🔹 Logout Function
+    //  Logout Function
     const handleLogout = async () => {
         await signOut(auth);
         navigate("/login"); // Redirect to login after logout
@@ -23,7 +23,7 @@ const Header = () => {
                 <Link to="/user_profile" className="btn btn-secondary">Profile</Link>
                 <Link to="/login" className="btn btn-secondary">Login</Link>
                 
-                {/* ✅ Show Logout Button ONLY if user is logged in */}
+                {/* Show Logout Button ONLY if user is logged in */}
                 {user && (
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                 )}

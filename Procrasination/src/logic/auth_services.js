@@ -6,32 +6,37 @@ import {
     GoogleAuthProvider 
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { taskDBSetup } from "./task_DB_setup";
+
 
 const googleProvider = new GoogleAuthProvider();
 
-/** 🔥 Handle Email Registration */
+/** Handle Email Registration */
 export const registerUser = async (email, password) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // ✅ Create Firestore entry
+    // Create Firestore entry
     await setDoc(doc(db, "users", user.uid), {
         username: "", // Will be set in UsernameSetup.jsx
         email,
         profilePic: "",
         streak: { currentStreak: 0, bestStreak: 0, lastLogin: "" } // Optional: initialize streaks here
     });
+    
+    //Run once at account creation
+    await taskDBSetup(user.uid); 
 
     return user;
 };
 
-/** 🔥 Handle Email Login */
+/** Handle Email Login */
 export const loginUser = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return { user: userCredential.user, requiresUsername: false }; // Will always redirect to username setup by default logic
 };
 
-/** 🔥 Handle Google Sign-In */
+/** Handle Google Sign-In */
 export const loginWithGoogle = async () => {
     const userCredential = await signInWithPopup(auth, googleProvider);
     const user = userCredential.user;
@@ -48,13 +53,15 @@ export const loginWithGoogle = async () => {
             requiresUsername = false;
         }
     } else {
-        // ✅ Create Firestore entry for new users
+        // Create Firestore entry for new users
         await setDoc(userRef, {
             username: "",
             email: user.email,
             profilePic: user.photoURL || "",
             streak: { currentStreak: 0, bestStreak: 0, lastLogin: "" }
         });
+
+        await taskDBSetup(user.uid);
     }
 
     return { user, requiresUsername };

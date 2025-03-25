@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+
 
 const UserMetrics = () => {
     const [username, setUsername] = useState("User"); 
@@ -79,7 +81,8 @@ const UserMetrics = () => {
         updateLoginStreak,
         darkMode, 
         loading
+        
     };
 };
 
-export default UserMetrics;
+export default  UserMetrics;

@@ -1,41 +1,81 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import React, { useEffect, useState } from "react";
+import {
+    fetchUserTasks,
+    addUserTask,
+    deleteUserTask,
+    completeUserTask
+} from "../logic/task_manager";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const NewTasks = () => {
-    // Sample hardcoded tasks
-    const [tasks, setTasks] = useState([
-        { id: 1, title: "Finish React Project", completed: false },
-        { id: 2, title: "Read a book", completed: true },
-        { id: 3, title: "Go for a walk", completed: false },
-    ]);
+    const [tasks, setTasks] = useState([]);
+    const [newTask, setNewTask] = useState("");
+
+    useEffect(() => {
+        const loadTasks = async () => {
+            const data = await fetchUserTasks();
+            setTasks(data);
+        };
+        loadTasks();
+    }, []);
+
+    const handleAddTask = async () => {
+        if (!newTask.trim()) return;
+        const task = await addUserTask(newTask);
+        if (task) setTasks([...tasks, task]);
+        setNewTask("");
+    };
+
+    const handleDelete = async (taskId) => {
+        await deleteUserTask(taskId);
+        setTasks(tasks.filter(t => t.id !== taskId));
+    };
+
+    const handleComplete = async (task) => {
+        await completeUserTask(task);
+        setTasks(tasks.filter(t => t.id !== task.id));
+    };
 
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">New Task List</h2>
 
-            {/* Add Task Section (Mock Button) */}
-            <div className="mb-3 d-flex">
-                <input type="text" className="form-control me-2" placeholder="Enter new task..." />
-                <button className="btn btn-primary">Add Task</button>
+            <div className="mb-4 d-flex">
+                <input
+                    type="text"
+                    className="form-control me-2"
+                    placeholder="Enter new task..."
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                />
+                <button className="btn btn-primary" onClick={handleAddTask}>
+                    <i className="bi bi-plus-circle me-1"></i> Add Task
+                </button>
             </div>
 
-            {/* Task List */}
-            <ul className="list-group" >
+            <ul className="list-group">
                 {tasks.map((task) => (
-                    <li key={task.id} className="list-group-item d-flex justify-content-between align-items-center">
+                    <li
+                        key={task.id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                    >
                         <span className={task.completed ? "text-decoration-line-through" : ""}>
                             {task.title}
                         </span>
-
-                        
-
                         <div>
-                            {/* Mock Edit Button */}
-                            <button className="btn btn-sm btn-warning me-2">Edit</button>
-
-                            {/* Mock Delete Button */}
-                            <button className="btn btn-sm btn-danger mt-1">Delete</button>
+                            <button
+                                className="btn btn-success btn-sm me-2"
+                                onClick={() => handleComplete(task)}
+                            >
+                                <i className="bi bi-check2-circle"></i>
+                            </button>
+                            <button
+                                className="btn btn-danger btn-sm"
+                                onClick={() => handleDelete(task.id)}
+                            >
+                                <i className="bi bi-trash3-fill"></i>
+                            </button>
                         </div>
                     </li>
                 ))}

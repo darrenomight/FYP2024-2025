@@ -10,8 +10,6 @@ const ProfilePictureUploader = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-
-
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (!file || !file.type.startsWith("image/")) return;
