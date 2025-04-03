@@ -9,6 +9,10 @@ import {
     setDoc,
     serverTimestamp
 } from "firebase/firestore";
+import { addXP } from "./xp_manager";
+
+await addXP(50); // or any amount based on logic
+
 
 // Fetch all user tasks
 export const fetchUserTasks = async () => {
@@ -21,7 +25,7 @@ export const fetchUserTasks = async () => {
 };
 
 // Add task with document ID as task title
-export const addUserTask = async (title) => {
+export const addUserTask = async (title, isDaily = false) => {
     const user = auth.currentUser;
     if (!user) return null;
 
@@ -31,11 +35,13 @@ export const addUserTask = async (title) => {
     await setDoc(taskRef, {
         title,
         completed: false,
+        type: isDaily ? "daily" : "basic",
         createdAt: serverTimestamp()
     });
 
-    return { id: idSafeTitle, title, completed: false };
+    return { id: idSafeTitle, title, completed: false, type: isDaily ? "daily" : "basic" };
 };
+
 
 // Delete task
 export const deleteUserTask = async (taskId) => {
@@ -46,19 +52,43 @@ export const deleteUserTask = async (taskId) => {
     await deleteDoc(taskRef);
 };
 
-// Mark task complete and archive
 export const completeUserTask = async (task) => {
     const user = auth.currentUser;
     if (!user) return;
 
     const taskRef = doc(db, "users", user.uid, "tasks", task.id);
-    const archiveRef = doc(db, "users", user.uid, "completedTasks", task.id);
+    const archiveId = `${task.id}_${Date.now()}`;
+    const archiveRef = doc(db, "users", user.uid, "completedTasks", archiveId);
+    const now = new Date().toISOString();
 
-    // Archive then delete
-    await setDoc(archiveRef, {
-        ...task,
-        completedAt: serverTimestamp()
-    });
-    await deleteDoc(taskRef);
-    // If for dailies 
+    if (task.type === "daily") {
+        // Mark daily task as completed (don't delete)
+        await updateDoc(taskRef, {
+            completed: true,
+            completedToday: true,
+            completedAt: now
+        });
+
+        //  Award XP
+        await addXP(30);
+
+        //  Optional: archive daily completions for history/medals
+        await setDoc(archiveRef, {
+            ...task,
+            completedAt: now,
+            type: "daily"
+        });
+    } else {
+        // Archive and delete basic task
+        await setDoc(archiveRef, {
+            ...task,
+            completedAt: now,
+            type: "basic"
+        });
+
+        await deleteDoc(taskRef);
+
+        // Award XP
+        await addXP(20);
+    }
 };

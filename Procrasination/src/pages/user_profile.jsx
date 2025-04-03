@@ -45,7 +45,7 @@ const Profile = () => {
                     />
                     <h3>{user.displayName || "User"}</h3>
                     <p className="text-muted">{user.email}</p>
-                    <p>Joined: January 10, 2024</p>
+                    <p>Joined: March 10, 2025</p>
                 </div>
 
                 <div className="col-md-8">

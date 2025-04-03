@@ -6,12 +6,12 @@ import { signOut } from "firebase/auth";
 
 const Header = () => {
     const navigate = useNavigate();
-    const user = auth.currentUser; // Check if user is logged in
+    const user = auth.currentUser; 
 
     //  Logout Function
     const handleLogout = async () => {
         await signOut(auth);
-        navigate("/login"); // Redirect to login after logout
+        navigate("/login"); 
     };
 
     return (

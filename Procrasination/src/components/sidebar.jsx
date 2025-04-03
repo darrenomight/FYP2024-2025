@@ -40,10 +40,45 @@ const Sidebar = () => {
                 <h5>Login Streak:</h5>
                 <p><strong>Current Streak:</strong> {currentStreak} days</p>
                 <p><strong>Best Streak:</strong> {bestStreak} days</p>
-                <p><strong>XP Earned:</strong> {xp || 0} XP</p>
+                <p><strong>Level:</strong> {Math.floor(xp / 100)}</p>
+                <p><strong>XP:</strong> {xp % 100} / 100</p>
+                <div className="progress">
+                    <div
+                        className="progress-bar"
+                        role="progressbar"
+                        style={{ width: `${xp % 100}%` }}
+                        aria-valuenow={xp % 100}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    >
+                        {xp % 100} XP
+                    </div>
+                </div>
+
                 <p><strong>Goals Completed:</strong> {goalsCompleted}</p>
             </div>
-        </div>
+
+            {/* Progress View */}
+            <div className="col-md-12">
+                <div className="card p-4 shadow-sm">
+                    <h5>View Your Progress</h5>
+                    <p>Track your achievements and milestones</p>
+                    <button className="btn btn-secondary" > Progress</button>
+                </div>
+            </div>
+
+
+            <div className="col-md-12">
+                <div className="card p-4 shadow-sm">
+                    <h5>Wanna see how your friends are doing ?</h5>
+                    <p>Check out the daily leaderboards to see how you and your friends are staying productive !</p>
+                    <button className="btn btn-secondary" >To Friends</button>
+                </div>
+            </div>
+        </div> // End Div
+
+
+
     );
 };
 
