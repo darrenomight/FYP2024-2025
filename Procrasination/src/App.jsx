@@ -9,6 +9,7 @@ import Header from './components/header';
 import Footer from './components/footer';
 import UsernameSetup from "./pages/username";
 import Customization from './pages/customise';
+import FriendsPage from './pages/friends';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/user_profile" element={<Profile />}/>
                 <Route path="/username-setup" element={<UsernameSetup />} />
                 <Route path="/customise" element={<Customization />} />
+                <Route path="/friends" element={<FriendsPage />} />
             </Routes>
             </div>
           <Footer /> {/* Footer stays at the bottom */ } 

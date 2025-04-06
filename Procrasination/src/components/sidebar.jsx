@@ -3,11 +3,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import defaultProfilePic from "../assets/sampleUserPf.jpg";
 import UserMetrics from "./user_metrics";
 import { getGoalsCompletedCount } from "./task_metrics";
+import { useNavigate } from "react-router-dom";
+
 
 const Sidebar = () => {
     const { username, profilePic, currentStreak, bestStreak, xp, loading } = UserMetrics();
     const [goalsCompleted, setGoalsCompleted] = useState(0);
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchCompleted = async () => {
             const count = await getGoalsCompletedCount();
@@ -71,8 +74,10 @@ const Sidebar = () => {
             <div className="col-md-12">
                 <div className="card p-4 shadow-sm">
                     <h5>Wanna see how your friends are doing ?</h5>
-                    <p>Check out the daily leaderboards to see how you and your friends are staying productive !</p>
-                    <button className="btn btn-secondary" >To Friends</button>
+                    <p>Check out the daily leaderboards to see how you and your friends are staying productive!</p>
+                    <button className="btn btn-secondary" onClick={() => navigate("/friends")}>
+                        To friends!
+                    </button>
                 </div>
             </div>
         </div> // End Div

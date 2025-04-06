@@ -3,9 +3,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { getXP } from "../logic/xp_manager";
-
-
-
+import { onSnapshot } from "firebase/firestore";
 
 const UserMetrics = () => {
     const [username, setUsername] = useState("User");
@@ -21,36 +19,33 @@ const UserMetrics = () => {
     const [progressXP, setProgressXP] = useState(0);
 
     useEffect(() => {
-        const fetchUserStats = async () => {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
+        const user = auth.currentUser;
+        if (!user) return;
+    
+        const userRef = doc(db, "users", user.uid);
+    
+        // Real-time listener to reflect changes instantly vs old system
+        const unsubscribe = onSnapshot(userRef, async (docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
                 setUsername(userData.username || "User");
                 setProfilePic(userData.profilePic || "");
                 setCurrentStreak(userData.streak?.currentStreak || 0);
                 setBestStreak(userData.streak?.bestStreak || 0);
                 setLastLogin(new Date(userData.streak?.lastLogin || 0));
                 setDarkMode(userData.customization?.darkMode || false);
-
-
+    
+                const xpValue = userData.xp || 0;
+                setXP(xpValue);
+                setLevel(Math.floor(xpValue / 100));
+                setProgressXP(xpValue % 100);
             }
-
-            const xpValue = await getXP();
-            setXP(xpValue);
-            setLevel(Math.floor(xpValue / 100));
-            setProgressXP(xpValue % 100);
-
+    
             setNextLoginTime(getNextResetTime());
             setLoading(false);
-
-        };
-
-        fetchUserStats();
+        });
+    
+        return () => unsubscribe(); //Clean up listener on component unmount
     }, []);
 
     const getNextResetTime = () => {
