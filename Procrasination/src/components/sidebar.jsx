@@ -66,7 +66,9 @@ const Sidebar = () => {
                 <div className="card p-4 shadow-sm">
                     <h5>View Your Progress</h5>
                     <p>Track your achievements and milestones</p>
-                    <button className="btn btn-secondary" > Progress</button>
+                    <button className="btn btn-secondary" onClick={() => navigate("/tracking_progress")}>
+                        View Progress
+                    </button>
                 </div>
             </div>
 

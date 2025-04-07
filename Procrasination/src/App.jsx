@@ -10,6 +10,7 @@ import Footer from './components/footer';
 import UsernameSetup from "./pages/username";
 import Customization from './pages/customise';
 import FriendsPage from './pages/friends';
+import AchievementsPage from './pages/tracking_progress';
 
 
 function App() {
@@ -28,9 +29,10 @@ function App() {
                 <Route path="/username-setup" element={<UsernameSetup />} />
                 <Route path="/customise" element={<Customization />} />
                 <Route path="/friends" element={<FriendsPage />} />
+                <Route path="/tracking_progress" element={<AchievementsPage />} />
             </Routes>
             </div>
-          <Footer /> {/* Footer stays at the bottom */ } 
+          <Footer /> {/* Footer stays at the bottom */  } 
       </Router>
        
   );
