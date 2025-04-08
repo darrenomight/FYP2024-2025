@@ -34,7 +34,14 @@ const AchievementsPage = () => {
                 <span className={`badge ${achv.unlocked ? "bg-success" : "bg-secondary"}`}>
                   {achv.unlocked ? "Unlocked" : "Locked"}
                 </span>
-                <p className="mt-2">🎁 XP: {achv.requirement}</p>
+                <p className="mt-2">
+                  🏁 Requirement: {achv.requirement} {achv.type.toUpperCase()}
+                </p>
+                <p className="text-muted" style={{ fontSize: "0.85rem" }}>
+                  {achv.unlocked
+                    ? `You earned: ${achv.icon}`
+                    : "Earn this reward by reaching the goal!"}
+                </p>
               </div>
             </div>
           </div>

@@ -2,23 +2,27 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import defaultProfilePic from "../assets/sampleUserPf.jpg";
 import UserMetrics from "./user_metrics";
-import { getGoalsCompletedCount } from "./task_metrics";
 import { useNavigate } from "react-router-dom";
-
+import { onSnapshot, collection } from "firebase/firestore";
+import { db, auth } from "../firebaseConfig";
 
 const Sidebar = () => {
     const { username, profilePic, currentStreak, bestStreak, xp, loading } = UserMetrics();
-    const [goalsCompleted, setGoalsCompleted] = useState(0);
+    const [completedCount, setCompletedCount] = useState(0);
     const navigate = useNavigate();
     
     useEffect(() => {
-        const fetchCompleted = async () => {
-            const count = await getGoalsCompletedCount();
-            setGoalsCompleted(count);
-        };
-
-        fetchCompleted();
-    }, []);
+        const user = auth.currentUser;
+        if (!user) return;
+      
+        const completedRef = collection(db, "users", user.uid, "completedTasks");
+      
+        const unsubscribe = onSnapshot(completedRef, (snapshot) => {
+          setCompletedCount(snapshot.size);
+        });
+      
+        return () => unsubscribe(); // cleanup on unmount
+      }, []);
 
     if (loading) return <p>Loading...</p>;
 
@@ -40,7 +44,7 @@ const Sidebar = () => {
 
             {/* Quick Stats - Mini Version of Login Streak */}
             <div className="card p-3">
-                <h5>Login Streak:</h5>
+                <h5>Fast stats about you</h5>
                 <p><strong>Current Streak:</strong> {currentStreak} days</p>
                 <p><strong>Best Streak:</strong> {bestStreak} days</p>
                 <p><strong>Level:</strong> {Math.floor(xp / 100)}</p>
@@ -57,8 +61,8 @@ const Sidebar = () => {
                         {xp % 100} XP
                     </div>
                 </div>
-
-                <p><strong>Goals Completed:</strong> {goalsCompleted}</p>
+                
+                <p><strong>Goals Completed:</strong> {completedCount}</p>
             </div>
 
             {/* Progress View */}
@@ -67,7 +71,7 @@ const Sidebar = () => {
                     <h5>View Your Progress</h5>
                     <p>Track your achievements and milestones</p>
                     <button className="btn btn-secondary" onClick={() => navigate("/tracking_progress")}>
-                        View Progress
+                        View my Progress
                     </button>
                 </div>
             </div>
@@ -75,8 +79,8 @@ const Sidebar = () => {
 
             <div className="col-md-12">
                 <div className="card p-4 shadow-sm">
-                    <h5>Wanna see how your friends are doing ?</h5>
-                    <p>Check out the daily leaderboards to see how you and your friends are staying productive!</p>
+                    <h5>Check in on your crew and family</h5>
+                    <p>See who’s quietly crushing it today.</p>
                     <button className="btn btn-secondary" onClick={() => navigate("/friends")}>
                         To friends!
                     </button>

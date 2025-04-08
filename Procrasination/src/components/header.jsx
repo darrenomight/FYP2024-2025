@@ -1,34 +1,96 @@
 import React from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
-import { auth } from "../firebaseConfig";
-import { signOut } from "firebase/auth";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import { AppBar, Toolbar, Button, Typography, Box } from '@mui/material';
 
 const Header = () => {
     const navigate = useNavigate();
-    const user = auth.currentUser; 
+    const location = useLocation();
+    const user = auth.currentUser;
 
-    //  Logout Function
+    const isLoggedIn = !!user;
+
     const handleLogout = async () => {
         await signOut(auth);
-        navigate("/login"); 
+        navigate("/login");
     };
 
     return (
-        <nav className="navbar navbar-dark bg-dark d-flex justify-content-center p-3">
-            <h2 className="text-white me-3">Momentum</h2>
-            <div className="btn-group">
-                <Link to="/" className="btn btn-secondary">Landing</Link>
-                <Link to="/main" className="btn btn-secondary">Main</Link>
-                <Link to="/user_profile" className="btn btn-secondary">Profile</Link>
-                <Link to="/login" className="btn btn-secondary">Login</Link>
-                
-                {/* Show Logout Button ONLY if user is logged in */}
-                {user && (
-                    <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
-                )}
-            </div>
-        </nav>
+        <AppBar position="static" sx={{ backgroundColor: "#212529", color: "white" }}>
+            <Toolbar className="d-flex justify-content-between container py-2">
+                {/* Momentum Logo links to Landing */}
+                <Typography
+                    variant="h5"
+                    component={Link}
+                    to="/"
+                    sx={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        fontWeight: 600,
+                        '&:hover': { color: '#bbb' }
+                    }}
+                >
+                    Momentum
+                </Typography>
+
+                {/* Navigation Buttons */}
+                <Box className="d-flex gap-3">
+                    {isLoggedIn && (
+                        <>
+                            <Button
+                                component={Link}
+                                to="/main"
+                                variant={location.pathname === "/main" ? "contained" : "outlined"}
+                                sx={{
+                                    minWidth: "100px",
+                                    color: "white",
+                                    borderColor: "white",
+                                    '&:hover': { borderColor: "#ccc" }
+                                }}
+                            >
+                                Main
+                            </Button>
+
+                            <Button
+                                component={Link}
+                                to="/user_profile"
+                                variant={location.pathname === "/user_profile" ? "contained" : "outlined"}
+                                sx={{
+                                    minWidth: "100px",
+                                    color: "white",
+                                    borderColor: "white",
+                                    '&:hover': { borderColor: "#ccc" }
+                                }}
+                            >
+                                Profile
+                            </Button>
+                        </>
+                    )}
+
+                    {!isLoggedIn ? (
+                        <Button
+                            component={Link}
+                            to="/login"
+                            variant="contained"
+                            color="primary"
+                            sx={{ minWidth: "100px" }}
+                        >
+                            Login
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={handleLogout}
+                            variant="contained"
+                            color="error"
+                            sx={{ minWidth: "100px" }}
+                        >
+                            Logout
+                        </Button>
+                    )}
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 };
 

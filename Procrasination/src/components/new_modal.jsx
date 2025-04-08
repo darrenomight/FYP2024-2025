@@ -36,6 +36,7 @@ const TaskModal = ({
                         onChange={() => setIsDaily(!isDaily)}
                         className="my-3"
                     />
+                    <p>Daily tasks repeat. Others complete and disappear</p>
 
                     <div className="d-grid gap-2 mb-3">
                         <Button variant="primary" onClick={handleSubmit}>

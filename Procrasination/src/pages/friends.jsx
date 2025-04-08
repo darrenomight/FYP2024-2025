@@ -35,6 +35,7 @@ const FriendsPage = () => {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h5>Friends List</h5>
+        <p>Wanna add friends and family. If they are signed up, use the button on the right and add them!</p>
         <Button variant="primary" onClick={() => setShowModal(true)}>
           Add / Manage Friends
         </Button>

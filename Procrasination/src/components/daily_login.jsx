@@ -4,6 +4,8 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import UserMetrics from "./user_metrics";
+import { addXP } from "../logic/xp_manager";
+import XPToast from "./xp_toast";
 
 const DailyLogin = () => {
     const [userId, setUserId] = useState(null);
@@ -14,6 +16,9 @@ const DailyLogin = () => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [buttonColor, setButtonColor] = useState("btn-danger");
     const [timeLeft, setTimeLeft] = useState("");
+    const [toastOpen, setToastOpen] = useState(false);
+    const [toastXP, setToastXP] = useState(0);
+
 
     // Track login status and user ID
     useEffect(() => {
@@ -102,6 +107,11 @@ const DailyLogin = () => {
         setNextLoginTime(getNextResetTime());
         setButtonColor("btn-success");
         setButtonDisabled(true);
+
+        // xp
+        await addXP(50);
+        setToastXP(50);              
+        setToastOpen(true);          
     };
 
     // Auto-unlock button after 1 AM
@@ -142,10 +152,10 @@ const DailyLogin = () => {
 
     return (
         <div className="card p-4 text-center">
-            <h5><strong> Daily Login Streak:</strong></h5>
-            <p><strong>Current Streak:</strong> {currentStreak} days</p>
-            <p><strong>Best Streak:</strong> {bestLogin} days</p>
-            <p><strong>Next Login:</strong> {nextLoginTime ? nextLoginTime.toLocaleString() : "Loading..."}</p>
+            <h5><strong> Building Your login Streaks</strong></h5>
+            <p><strong>You've checked in for:</strong> {currentStreak} days</p>
+            <p><strong>Your best so far? Also</strong> {bestLogin} days</p>
+            <p><strong>Next Login day:</strong> {nextLoginTime ? nextLoginTime.toLocaleString() : "Loading..."}</p>
             <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                 ⏱ Time until next login: <strong>{timeLeft}</strong>
             </p>
@@ -156,7 +166,9 @@ const DailyLogin = () => {
             >
                 {buttonDisabled ? "Logged In ✅" : "Login Now"}
             </button>
+            <XPToast open={toastOpen} xpAmount={toastXP} onClose={() => setToastOpen(false)} />
         </div>
+        
     );
 };
 

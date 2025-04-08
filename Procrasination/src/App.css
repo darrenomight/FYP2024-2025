@@ -7,3 +7,61 @@ body.dark-mode .card {
     background-color: #1e1e1e;
     color: white;
 }
+
+body {
+    overflow-x: hidden;
+}
+
+.highlight-current-user td {
+    background-color: #fff9db !important;
+    font-weight: bold;
+}
+
+.rounded-start {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.rounded-end {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* App.css */
+
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    /* Takes up available space, pushing footer down */
+}
+
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex-grow: 1;
+    padding-bottom: 60px;
+    /* Avoid footer overlap */
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    text-align: center;
+}

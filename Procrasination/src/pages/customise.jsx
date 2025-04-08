@@ -48,8 +48,11 @@ const Customise = () => {
                     id="darkModeSwitch"
                 />
                 <label className="form-check-label" htmlFor="darkModeSwitch">
-                    Enable Dark Mode
+                    Enable Dark Mode "Work in progress"
                 </label>
+
+                <p> </p>
+                <p>More option are also "Work in progress" </p>
             </div>
 
             <button className="btn btn-secondary mt-4" onClick={() => navigate("/user_profile")}>

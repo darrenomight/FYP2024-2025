@@ -17,8 +17,8 @@ function App() {
 
   return (
       <Router>
-        <Header /> {/* This ensures the Header is visible on all pages */}
-            <div className="content"> {/* Wrapper to push footer down */}
+        <Header /> 
+            <div className="content"> 
             <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/main" element={<Main />} />
@@ -32,7 +32,7 @@ function App() {
                 <Route path="/tracking_progress" element={<AchievementsPage />} />
             </Routes>
             </div>
-          <Footer /> {/* Footer stays at the bottom */  } 
+          <Footer /> 
       </Router>
        
   );

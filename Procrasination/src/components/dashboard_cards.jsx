@@ -5,12 +5,21 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { addUserTask, fetchUserTasks, completeUserTask, deleteUserTask } from "../logic/task_manager";
 import { resetDailyTasks } from "../logic/reset_daily_tasks";
 import TaskModal from "./new_modal"
+import XPToast from "./xp_toast";
+import UserMetrics from "./user_metrics";
+import { onSnapshot, collection } from "firebase/firestore";
+import {db, auth} from "../firebaseConfig"
 
 const DashboardCards = () => {
     const [showModal, setShowModal] = useState(false);
     const [newTask, setNewTask] = useState("");
     const [isDaily, setIsDaily] = useState(false);
     const [completedToday, setCompletedToday] = useState([]);
+    const [toastOpen, setToastOpen] = useState(false);
+    const [toastXP, setToastXP] = useState(0);
+    const {username} = UserMetrics();
+    
+
 
     const handleSubmit = async () => {
         if (!newTask.trim()) return;
@@ -29,28 +38,32 @@ const DashboardCards = () => {
     const [userTasks, setUserTasks] = useState([]);
 
     useEffect(() => {
-        const initialize = async () => {
-            await resetDailyTasks(); // Unlock dailies at 1 AM
-            const tasks = await fetchUserTasks();
+        const user = auth.currentUser;
+        if (!user) return;
     
-            // Filter logic: keep dailies, hide completed basics
+        const tasksRef = collection(db, "users", user.uid, "tasks");
+    
+        const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
+            const tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+            // Filter logic: keep dailies and active basics
             const filteredTasks = tasks.filter(task => {
                 return task.type === "daily" || !task.completed;
             });
     
             setUserTasks(filteredTasks);
     
-            // Track completed daily tasks
+            // Update completed dailies
             const completed = filteredTasks
                 .filter(task => task.type === "daily" && task.completed)
                 .map(task => task.id);
     
             setCompletedToday(completed);
-        };
+        });
     
-        initialize();
+        return () => unsubscribe(); // cleanup listener
     }, []);
-    
+
 
 
     return (
@@ -63,13 +76,16 @@ const DashboardCards = () => {
 
 
                 {/* New Task Modal Trigger */}
-                <div className="col-md-12">
+                <div className="card p-4 shadow-sm text-center mx-auto" style={{ maxWidth: "800px" }}>
+
                     <div className="card p-4 shadow-sm text-center">
                         <h5>Your Daily Tasks</h5>
                         <p>
-                            Need to Add new items to your task list?
+                            Feeling ready to get something done?
                             <br />
-                            Just press the button and select your goals, and manage them below. The ✅ is for completion and 🗑️ for mistakes.
+                            Add a simple goal for today — no pressure, and manage them below. 
+                            <br />
+                            ✅ means you did it, 🗑️ means it’s not the vibe anymore.
                         </p>
                         <div className="mt-1">
                             <button className="btn btn-secondary" onClick={() => setShowModal(true)}>Let's add!</button>
@@ -79,8 +95,8 @@ const DashboardCards = () => {
 
 
                 {/* My Tasks Table */}
-                <div className="mt-4 text-center" >
-                    <h4>My Tasks</h4>
+                <div className="mt-4 text-center container-fluid px-3 " >
+                    <h4> {username}'s Tasks</h4>
                     <table className="table table-striped table-hover">
                         <thead className="table-light">
                             <tr>
@@ -108,18 +124,24 @@ const DashboardCards = () => {
                                             <button
                                                 className="btn btn-success btn-sm me-2"
                                                 onClick={async () => {
-                                                    await completeUserTask(task);
+                                                    const xp = isDaily ? 30 : 20;
+                                                    await completeUserTask(task);  // Still performs all DB logic
+
+                                                    // Show toast
+                                                    setToastXP(xp);
+                                                    setToastOpen(true);
+
+                                                    // Update UI
                                                     if (isDaily) {
-                                                        // Mark as completed for locking
                                                         const updatedTasks = userTasks.map(t =>
                                                             t.id === task.id ? { ...t, completed: true } : t
                                                         );
                                                         setUserTasks(updatedTasks);
                                                         setCompletedToday([...completedToday, task.id]);
                                                     } else {
-                                                        // Basic tasks are deleted after completion
                                                         setUserTasks(userTasks.filter((t) => t.id !== task.id));
                                                     }
+
                                                 }}
                                                 disabled={isDaily && completedToday.includes(task.id)}
                                             >
@@ -157,6 +179,7 @@ const DashboardCards = () => {
                 handleSubmit={handleSubmit}
                 handlePreset={handlePreset}
             />
+            <XPToast open={toastOpen} xpAmount={toastXP} onClose={() => setToastOpen(false)} />
 
         </div>
     );

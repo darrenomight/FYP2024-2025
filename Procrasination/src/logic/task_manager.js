@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { addXP } from "./xp_manager";
 
+
+
 await addXP(50); // or any amount based on logic
 
 
@@ -71,8 +73,8 @@ export const completeUserTask = async (task) => {
 
         //  Award XP
         await addXP(30);
+        
 
-        //  Optional: archive daily completions for history/medals
         await setDoc(archiveRef, {
             ...task,
             completedAt: now,
@@ -90,5 +92,6 @@ export const completeUserTask = async (task) => {
 
         // Award XP
         await addXP(20);
+        
     }
 };
