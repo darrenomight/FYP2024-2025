@@ -11,11 +11,6 @@ import {
 } from "firebase/firestore";
 import { addXP } from "./xp_manager";
 
-
-
-await addXP(50); // or any amount based on logic
-
-
 // Fetch all user tasks
 export const fetchUserTasks = async () => {
     const user = auth.currentUser;
